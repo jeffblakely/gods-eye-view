@@ -4151,8 +4151,9 @@ configured and Photon/OpenStreetMap as fallback, including Google transport
 failures or declined requests. The offline pair answer with no request and no
 key, and decline everything they are not certain of: a coordinate must be a
 decimal-degree pair (either order when N/S/E/W fix the axes), and a bundled name
-must match exactly, so `12junk, 34oops` and `austin, tx` both reach the
-geocoders instead of being answered from the bundle. Degrees/minutes/seconds and
+must match exactly, so `12junk, 34oops`, `40,,74` and `austin, tx` all reach the
+geocoders instead of being answered from the bundle; an empty field between
+separators counts as a component rather than being skipped. Degrees/minutes/seconds and
 grid references are not parsed. An answer either provider gives is exact, so
 nearby-landmark recovery stands aside for it — otherwise a typed coordinate
 could be replaced by whatever Places finds near the current view. The portable `./search` export

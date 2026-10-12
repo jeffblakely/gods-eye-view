@@ -1,5 +1,9 @@
 # Changelog
 
+- Coordinate search no longer skips empty fields, so malformed queries such as
+  `40,,74`, `,40,74` and `40;;74` reach the geocoders instead of resolving as
+  an exact offline coordinate.
+
 - Treat explicitly current, complete empty vessel coverage as a successful update,
   clearing obsolete contacts while retaining stale or incomplete snapshots.
 

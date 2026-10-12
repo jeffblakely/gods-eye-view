@@ -81,6 +81,14 @@ test('malformed and ambiguous coordinates are refused, never guessed', () => {
     '1e3, 5',
     '0x40, 74',
     '40 74 12',
+    // An empty field is a malformed query, not a separator to skip.
+    '40,,74',
+    ',40,74',
+    '40,74,',
+    '40;;74',
+    '40,;74',
+    '40, , 74',
+    ',,40,74',
     // Two letters naming the same axis leaves the other axis unstated.
     'N 40, N 74',
     'E 40, W 74',
