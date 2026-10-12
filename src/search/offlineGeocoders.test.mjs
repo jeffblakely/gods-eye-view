@@ -176,6 +176,41 @@ test('the offline providers answer ahead of the network ones, which stay in orde
   assert.deepEqual(asked, [], 'a bundled name reaches no network provider');
 });
 
+test('a coordinate with an empty field reaches the network providers unchanged', async () => {
+  const asked = [];
+  const search = createPlaceSearch({
+    providers: [
+      createCoordinateGeocoder(),
+      {
+        async geocode(query) {
+          asked.push(query);
+          return {
+            place: { lat: 1, lng: 2, label: 'network hit', types: [] },
+            answered: true,
+          };
+        },
+      },
+    ],
+  });
+
+  const malformed = ['40,,74', ',40,74', '40,74,', '40;;74'];
+  for (const query of malformed) {
+    const outcome = await search.geocode(query);
+    assert.equal(
+      outcome.place.label,
+      'network hit',
+      `${JSON.stringify(query)} must not resolve offline`,
+    );
+  }
+  assert.deepEqual(asked, malformed, 'each query is handed on as typed');
+
+  asked.length = 0;
+  const wellFormed = await search.geocode('40,74');
+  assert.equal(wellFormed.place.lat, 40);
+  assert.equal(wellFormed.place.lng, 74);
+  assert.deepEqual(asked, [], 'a well-formed pair still resolves offline');
+});
+
 test('a cancelled search stops the offline providers too', async () => {
   const controller = new AbortController();
   controller.abort();
